@@ -5,17 +5,16 @@
 
 
 typedef struct __mavlink_dnn_recv_t {
- uint64_t timestamp_send; /*<  output gyro signal*/
  float recovered_signal; /*<  output gyro signal*/
 } mavlink_dnn_recv_t;
 
-#define MAVLINK_MSG_ID_DNN_RECV_LEN 12
-#define MAVLINK_MSG_ID_DNN_RECV_MIN_LEN 12
-#define MAVLINK_MSG_ID_12011_LEN 12
-#define MAVLINK_MSG_ID_12011_MIN_LEN 12
+#define MAVLINK_MSG_ID_DNN_RECV_LEN 4
+#define MAVLINK_MSG_ID_DNN_RECV_MIN_LEN 4
+#define MAVLINK_MSG_ID_12011_LEN 4
+#define MAVLINK_MSG_ID_12011_MIN_LEN 4
 
-#define MAVLINK_MSG_ID_DNN_RECV_CRC 169
-#define MAVLINK_MSG_ID_12011_CRC 169
+#define MAVLINK_MSG_ID_DNN_RECV_CRC 143
+#define MAVLINK_MSG_ID_12011_CRC 143
 
 
 
@@ -23,17 +22,15 @@ typedef struct __mavlink_dnn_recv_t {
 #define MAVLINK_MESSAGE_INFO_DNN_RECV { \
     12011, \
     "DNN_RECV", \
-    2, \
-    {  { "recovered_signal", NULL, MAVLINK_TYPE_FLOAT, 0, 8, offsetof(mavlink_dnn_recv_t, recovered_signal) }, \
-         { "timestamp_send", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_dnn_recv_t, timestamp_send) }, \
+    1, \
+    {  { "recovered_signal", NULL, MAVLINK_TYPE_FLOAT, 0, 0, offsetof(mavlink_dnn_recv_t, recovered_signal) }, \
          } \
 }
 #else
 #define MAVLINK_MESSAGE_INFO_DNN_RECV { \
     "DNN_RECV", \
-    2, \
-    {  { "recovered_signal", NULL, MAVLINK_TYPE_FLOAT, 0, 8, offsetof(mavlink_dnn_recv_t, recovered_signal) }, \
-         { "timestamp_send", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_dnn_recv_t, timestamp_send) }, \
+    1, \
+    {  { "recovered_signal", NULL, MAVLINK_TYPE_FLOAT, 0, 0, offsetof(mavlink_dnn_recv_t, recovered_signal) }, \
          } \
 }
 #endif
@@ -45,21 +42,18 @@ typedef struct __mavlink_dnn_recv_t {
  * @param msg The MAVLink message to compress the data into
  *
  * @param recovered_signal  output gyro signal
- * @param timestamp_send  output gyro signal
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_dnn_recv_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-                               float recovered_signal, uint64_t timestamp_send)
+                               float recovered_signal)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_DNN_RECV_LEN];
-    _mav_put_uint64_t(buf, 0, timestamp_send);
-    _mav_put_float(buf, 8, recovered_signal);
+    _mav_put_float(buf, 0, recovered_signal);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_DNN_RECV_LEN);
 #else
     mavlink_dnn_recv_t packet;
-    packet.timestamp_send = timestamp_send;
     packet.recovered_signal = recovered_signal;
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_DNN_RECV_LEN);
@@ -76,22 +70,19 @@ static inline uint16_t mavlink_msg_dnn_recv_pack(uint8_t system_id, uint8_t comp
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
  * @param recovered_signal  output gyro signal
- * @param timestamp_send  output gyro signal
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_dnn_recv_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
                                mavlink_message_t* msg,
-                                   float recovered_signal,uint64_t timestamp_send)
+                                   float recovered_signal)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_DNN_RECV_LEN];
-    _mav_put_uint64_t(buf, 0, timestamp_send);
-    _mav_put_float(buf, 8, recovered_signal);
+    _mav_put_float(buf, 0, recovered_signal);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_DNN_RECV_LEN);
 #else
     mavlink_dnn_recv_t packet;
-    packet.timestamp_send = timestamp_send;
     packet.recovered_signal = recovered_signal;
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_DNN_RECV_LEN);
@@ -111,7 +102,7 @@ static inline uint16_t mavlink_msg_dnn_recv_pack_chan(uint8_t system_id, uint8_t
  */
 static inline uint16_t mavlink_msg_dnn_recv_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_dnn_recv_t* dnn_recv)
 {
-    return mavlink_msg_dnn_recv_pack(system_id, component_id, msg, dnn_recv->recovered_signal, dnn_recv->timestamp_send);
+    return mavlink_msg_dnn_recv_pack(system_id, component_id, msg, dnn_recv->recovered_signal);
 }
 
 /**
@@ -125,7 +116,7 @@ static inline uint16_t mavlink_msg_dnn_recv_encode(uint8_t system_id, uint8_t co
  */
 static inline uint16_t mavlink_msg_dnn_recv_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_dnn_recv_t* dnn_recv)
 {
-    return mavlink_msg_dnn_recv_pack_chan(system_id, component_id, chan, msg, dnn_recv->recovered_signal, dnn_recv->timestamp_send);
+    return mavlink_msg_dnn_recv_pack_chan(system_id, component_id, chan, msg, dnn_recv->recovered_signal);
 }
 
 /**
@@ -133,21 +124,18 @@ static inline uint16_t mavlink_msg_dnn_recv_encode_chan(uint8_t system_id, uint8
  * @param chan MAVLink channel to send the message
  *
  * @param recovered_signal  output gyro signal
- * @param timestamp_send  output gyro signal
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-static inline void mavlink_msg_dnn_recv_send(mavlink_channel_t chan, float recovered_signal, uint64_t timestamp_send)
+static inline void mavlink_msg_dnn_recv_send(mavlink_channel_t chan, float recovered_signal)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_DNN_RECV_LEN];
-    _mav_put_uint64_t(buf, 0, timestamp_send);
-    _mav_put_float(buf, 8, recovered_signal);
+    _mav_put_float(buf, 0, recovered_signal);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_DNN_RECV, buf, MAVLINK_MSG_ID_DNN_RECV_MIN_LEN, MAVLINK_MSG_ID_DNN_RECV_LEN, MAVLINK_MSG_ID_DNN_RECV_CRC);
 #else
     mavlink_dnn_recv_t packet;
-    packet.timestamp_send = timestamp_send;
     packet.recovered_signal = recovered_signal;
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_DNN_RECV, (const char *)&packet, MAVLINK_MSG_ID_DNN_RECV_MIN_LEN, MAVLINK_MSG_ID_DNN_RECV_LEN, MAVLINK_MSG_ID_DNN_RECV_CRC);
@@ -162,7 +150,7 @@ static inline void mavlink_msg_dnn_recv_send(mavlink_channel_t chan, float recov
 static inline void mavlink_msg_dnn_recv_send_struct(mavlink_channel_t chan, const mavlink_dnn_recv_t* dnn_recv)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-    mavlink_msg_dnn_recv_send(chan, dnn_recv->recovered_signal, dnn_recv->timestamp_send);
+    mavlink_msg_dnn_recv_send(chan, dnn_recv->recovered_signal);
 #else
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_DNN_RECV, (const char *)dnn_recv, MAVLINK_MSG_ID_DNN_RECV_MIN_LEN, MAVLINK_MSG_ID_DNN_RECV_LEN, MAVLINK_MSG_ID_DNN_RECV_CRC);
 #endif
@@ -176,17 +164,15 @@ static inline void mavlink_msg_dnn_recv_send_struct(mavlink_channel_t chan, cons
   is usually the receive buffer for the channel, and allows a reply to an
   incoming message with minimum stack space usage.
  */
-static inline void mavlink_msg_dnn_recv_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  float recovered_signal, uint64_t timestamp_send)
+static inline void mavlink_msg_dnn_recv_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  float recovered_signal)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char *buf = (char *)msgbuf;
-    _mav_put_uint64_t(buf, 0, timestamp_send);
-    _mav_put_float(buf, 8, recovered_signal);
+    _mav_put_float(buf, 0, recovered_signal);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_DNN_RECV, buf, MAVLINK_MSG_ID_DNN_RECV_MIN_LEN, MAVLINK_MSG_ID_DNN_RECV_LEN, MAVLINK_MSG_ID_DNN_RECV_CRC);
 #else
     mavlink_dnn_recv_t *packet = (mavlink_dnn_recv_t *)msgbuf;
-    packet->timestamp_send = timestamp_send;
     packet->recovered_signal = recovered_signal;
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_DNN_RECV, (const char *)packet, MAVLINK_MSG_ID_DNN_RECV_MIN_LEN, MAVLINK_MSG_ID_DNN_RECV_LEN, MAVLINK_MSG_ID_DNN_RECV_CRC);
@@ -206,17 +192,7 @@ static inline void mavlink_msg_dnn_recv_send_buf(mavlink_message_t *msgbuf, mavl
  */
 static inline float mavlink_msg_dnn_recv_get_recovered_signal(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_float(msg,  8);
-}
-
-/**
- * @brief Get field timestamp_send from dnn_recv message
- *
- * @return  output gyro signal
- */
-static inline uint64_t mavlink_msg_dnn_recv_get_timestamp_send(const mavlink_message_t* msg)
-{
-    return _MAV_RETURN_uint64_t(msg,  0);
+    return _MAV_RETURN_float(msg,  0);
 }
 
 /**
@@ -228,7 +204,6 @@ static inline uint64_t mavlink_msg_dnn_recv_get_timestamp_send(const mavlink_mes
 static inline void mavlink_msg_dnn_recv_decode(const mavlink_message_t* msg, mavlink_dnn_recv_t* dnn_recv)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-    dnn_recv->timestamp_send = mavlink_msg_dnn_recv_get_timestamp_send(msg);
     dnn_recv->recovered_signal = mavlink_msg_dnn_recv_get_recovered_signal(msg);
 #else
         uint8_t len = msg->len < MAVLINK_MSG_ID_DNN_RECV_LEN? msg->len : MAVLINK_MSG_ID_DNN_RECV_LEN;

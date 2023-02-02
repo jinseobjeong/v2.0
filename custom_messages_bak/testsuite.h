@@ -93,11 +93,10 @@ static void mavlink_test_dnn_recv(uint8_t system_id, uint8_t component_id, mavli
         uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
         uint16_t i;
     mavlink_dnn_recv_t packet_in = {
-        93372036854775807ULL,73.0
+        17.0
     };
     mavlink_dnn_recv_t packet1, packet2;
         memset(&packet1, 0, sizeof(packet1));
-        packet1.timestamp_send = packet_in.timestamp_send;
         packet1.recovered_signal = packet_in.recovered_signal;
         
         
@@ -113,12 +112,12 @@ static void mavlink_test_dnn_recv(uint8_t system_id, uint8_t component_id, mavli
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_dnn_recv_pack(system_id, component_id, &msg , packet1.recovered_signal , packet1.timestamp_send );
+    mavlink_msg_dnn_recv_pack(system_id, component_id, &msg , packet1.recovered_signal );
     mavlink_msg_dnn_recv_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_dnn_recv_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.recovered_signal , packet1.timestamp_send );
+    mavlink_msg_dnn_recv_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.recovered_signal );
     mavlink_msg_dnn_recv_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
@@ -131,7 +130,7 @@ static void mavlink_test_dnn_recv(uint8_t system_id, uint8_t component_id, mavli
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
         
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_dnn_recv_send(MAVLINK_COMM_1 , packet1.recovered_signal , packet1.timestamp_send );
+    mavlink_msg_dnn_recv_send(MAVLINK_COMM_1 , packet1.recovered_signal );
     mavlink_msg_dnn_recv_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 }
